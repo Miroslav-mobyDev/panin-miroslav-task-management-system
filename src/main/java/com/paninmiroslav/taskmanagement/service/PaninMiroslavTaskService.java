@@ -6,7 +6,24 @@ import org.springframework.data.domain.Page;
 
 public interface PaninMiroslavTaskService {
 
-    PaninMiroslavTaskResponseDto createTask(PaninMiroslavTaskRequestDto dto);
+    PaninMiroslavTaskResponseDto createTask(
+            PaninMiroslavTaskRequestDto dto
+    );
 
-    Page<PaninMiroslavTaskResponseDto> getAllTasks(int page, int size, String sort);
+    Page<PaninMiroslavTaskResponseDto> getAllTasks(
+            int page,
+            int size,
+            String sort
+    );
+
+    PaninMiroslavTaskResponseDto getTaskById(
+            Long id
+    );
+
+    PaninMiroslavTaskResponseDto updateTask(
+            Long id,
+            PaninMiroslavTaskRequestDto dto
+    );
+
+    void deleteTask(Long id);
 }

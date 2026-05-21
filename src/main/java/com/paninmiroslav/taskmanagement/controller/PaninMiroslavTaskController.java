@@ -17,18 +17,74 @@ public class PaninMiroslavTaskController {
     private final PaninMiroslavTaskService service;
 
     @PostMapping
-    public ResponseEntity<PaninMiroslavTaskResponseDto> createTask(
-            @Valid @RequestBody PaninMiroslavTaskRequestDto dto
+    public ResponseEntity<PaninMiroslavTaskResponseDto>
+    createTask(
+            @Valid
+            @RequestBody
+            PaninMiroslavTaskRequestDto dto
     ) {
-        return ResponseEntity.ok(service.createTask(dto));
+
+        return ResponseEntity.ok(
+                service.createTask(dto)
+        );
     }
 
     @GetMapping
-    public ResponseEntity<Page<PaninMiroslavTaskResponseDto>> getAllTasks(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sort
+    public ResponseEntity<Page<PaninMiroslavTaskResponseDto>>
+    getAllTasks(
+
+            @RequestParam(defaultValue = "0")
+            int page,
+
+            @RequestParam(defaultValue = "10")
+            int size,
+
+            @RequestParam(defaultValue = "id")
+            String sort
     ) {
-        return ResponseEntity.ok(service.getAllTasks(page, size, sort));
+
+        return ResponseEntity.ok(
+                service.getAllTasks(page, size, sort)
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaninMiroslavTaskResponseDto>
+    getTaskById(
+            @PathVariable Long id
+    ) {
+
+        return ResponseEntity.ok(
+                service.getTaskById(id)
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PaninMiroslavTaskResponseDto>
+    updateTask(
+
+            @PathVariable Long id,
+
+            @Valid
+            @RequestBody
+            PaninMiroslavTaskRequestDto dto
+    ) {
+
+        return ResponseEntity.ok(
+                service.updateTask(id, dto)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>
+    deleteTask(
+            @PathVariable Long id
+    ) {
+
+        service.deleteTask(id);
+
+        return ResponseEntity.ok(
+                "Task deleted successfully"
+        );
     }
 }
