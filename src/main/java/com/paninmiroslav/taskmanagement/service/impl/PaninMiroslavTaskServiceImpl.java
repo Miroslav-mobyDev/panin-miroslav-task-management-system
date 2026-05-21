@@ -8,10 +8,12 @@ import com.paninmiroslav.taskmanagement.mapper.PaninMiroslavTaskMapper;
 import com.paninmiroslav.taskmanagement.repository.PaninMiroslavTaskRepository;
 import com.paninmiroslav.taskmanagement.service.PaninMiroslavTaskService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PaninMiroslavTaskServiceImpl
         implements PaninMiroslavTaskService {
@@ -25,7 +27,13 @@ public class PaninMiroslavTaskServiceImpl
             PaninMiroslavTaskRequestDto dto
     ) {
 
-        PaninMiroslavTask task = mapper.toEntity(dto);
+        log.info(
+                "Creating new task: {}",
+                dto.getTitle()
+        );
+
+        PaninMiroslavTask task =
+                mapper.toEntity(dto);
 
         task.setStatus("OPEN");
 
@@ -42,6 +50,13 @@ public class PaninMiroslavTaskServiceImpl
             String sort
     ) {
 
+        log.info(
+                "Fetching tasks page={}, size={}, sort={}",
+                page,
+                size,
+                sort
+        );
+
         Pageable pageable = PageRequest.of(
                 page,
                 size,
@@ -56,6 +71,11 @@ public class PaninMiroslavTaskServiceImpl
     public PaninMiroslavTaskResponseDto getTaskById(
             Long id
     ) {
+
+        log.info(
+                "Fetching task by id: {}",
+                id
+        );
 
         PaninMiroslavTask task =
                 repository.findById(id)
@@ -73,6 +93,11 @@ public class PaninMiroslavTaskServiceImpl
             Long id,
             PaninMiroslavTaskRequestDto dto
     ) {
+
+        log.info(
+                "Updating task with id: {}",
+                id
+        );
 
         PaninMiroslavTask task =
                 repository.findById(id)
@@ -97,6 +122,11 @@ public class PaninMiroslavTaskServiceImpl
             Long id
     ) {
 
+        log.info(
+                "Deleting task with id: {}",
+                id
+        );
+
         PaninMiroslavTask task =
                 repository.findById(id)
                         .orElseThrow(() ->
@@ -106,5 +136,10 @@ public class PaninMiroslavTaskServiceImpl
                         );
 
         repository.delete(task);
+
+        log.info(
+                "Task deleted successfully: {}",
+                id
+        );
     }
 }
