@@ -3,6 +3,7 @@ package com.paninmiroslav.taskmanagement.service.impl;
 import com.paninmiroslav.taskmanagement.dto.request.PaninMiroslavTaskRequestDto;
 import com.paninmiroslav.taskmanagement.dto.response.PaninMiroslavTaskResponseDto;
 import com.paninmiroslav.taskmanagement.entity.PaninMiroslavTask;
+import com.paninmiroslav.taskmanagement.exception.PaninMiroslavTaskNotFoundException;
 import com.paninmiroslav.taskmanagement.mapper.PaninMiroslavTaskMapper;
 import com.paninmiroslav.taskmanagement.repository.PaninMiroslavTaskRepository;
 import com.paninmiroslav.taskmanagement.service.PaninMiroslavTaskService;
@@ -16,6 +17,7 @@ public class PaninMiroslavTaskServiceImpl
         implements PaninMiroslavTaskService {
 
     private final PaninMiroslavTaskRepository repository;
+
     private final PaninMiroslavTaskMapper mapper;
 
     @Override
@@ -27,9 +29,10 @@ public class PaninMiroslavTaskServiceImpl
 
         task.setStatus("OPEN");
 
-        return mapper.toDto(
-                repository.save(task)
-        );
+        PaninMiroslavTask savedTask =
+                repository.save(task);
+
+        return mapper.toDto(savedTask);
     }
 
     @Override
@@ -54,10 +57,13 @@ public class PaninMiroslavTaskServiceImpl
             Long id
     ) {
 
-        PaninMiroslavTask task = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Task not found")
-                );
+        PaninMiroslavTask task =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new PaninMiroslavTaskNotFoundException(
+                                        "Task not found with id: " + id
+                                )
+                        );
 
         return mapper.toDto(task);
     }
@@ -68,27 +74,36 @@ public class PaninMiroslavTaskServiceImpl
             PaninMiroslavTaskRequestDto dto
     ) {
 
-        PaninMiroslavTask task = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Task not found")
-                );
+        PaninMiroslavTask task =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new PaninMiroslavTaskNotFoundException(
+                                        "Task not found with id: " + id
+                                )
+                        );
 
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
         task.setPriority(dto.getPriority());
 
-        return mapper.toDto(
-                repository.save(task)
-        );
+        PaninMiroslavTask updatedTask =
+                repository.save(task);
+
+        return mapper.toDto(updatedTask);
     }
 
     @Override
-    public void deleteTask(Long id) {
+    public void deleteTask(
+            Long id
+    ) {
 
-        PaninMiroslavTask task = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Task not found")
-                );
+        PaninMiroslavTask task =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new PaninMiroslavTaskNotFoundException(
+                                        "Task not found with id: " + id
+                                )
+                        );
 
         repository.delete(task);
     }
